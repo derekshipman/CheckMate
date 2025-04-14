@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Interface</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f5f7;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    .payment-card {
+      max-width: 480px;
+      width: 100%;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease-out;
+    }
+    
+    .show-card {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .restaurant-name {
+      font-size: 28px;
+      font-weight: 600;
+      color: #1f2937;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    
+    .bill-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      color: #4b5563;
+    }
+    
+    .subtotal {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1px solid #e5e7eb;
+      font-weight: 500;
+    }
+    
+    .tip-selection {
+      margin: 24px 0;
+    }
+    
+    .tip-options {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    
+    .tip-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    
+    .tip-btn.active {
+      background-color: #1f2937;
+      color: white;
+    }
+    
+    .total-section {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 24px 0;
+    }
+    
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .action-btn {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .payment-button {
+      width: 100%;
+      padding: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #1f2937;
+      color: white;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .payment-button:hover {
+      background-color: #111827;
+    }
+    
+    .thank-you {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #10b981;
+      color: white;
+      padding: 10px 15px; /* Reduced horizontal padding from 20px to 15px */
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      display: none;
+    }
+    
+    .receipt-button {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      font-size: 16px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      display: none;
+    }
+    
+    .receipt-options {
+      position: absolute;
+      bottom: 24px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      display: none;
+    }
+    
+    .receipt-options-container {
+      display: inline-flex;
+      gap: 4px; /* Very close together */
+    }
+    
+    .receipt-option {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      font-size: 16px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    
+    /* Animation classes */
+    .fade-out {
+      animation: fadeOut 0.5s forwards;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s forwards;
+    }
+    
+    .move-left {
+      animation: moveLeft 0.5s forwards;
+    }
+    
+    .move-right {
+      animation: moveRight 0.5s forwards;
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes moveLeft {
+      from { transform: translateX(0); }
+      to { transform: translateX(-20px); }
+    }
+    
+    @keyframes moveRight {
+      from { transform: translateX(0); }
+      to { transform: translateX(20px); }
+    }
+    
+    /* Intro screen styling */
+    .intro-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #1f2937;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      overflow: hidden;
+      transition: opacity 0.7s ease-out;
+    }
+    
+    .logo-container {
+      text-align: center;
+      width: 300px;
+    }
+    
+    .checkmark-container {
+      display: block;
+      margin: 0 auto 5px auto; /* Reduced margin from 15px to 5px */
+      width: 50px;
+      height: 50px;
+    }
+    
+    .checkmark {
+      width: 50px;
+      height: 50px;
+      stroke: white;
+      stroke-width: 3;
+      stroke-dasharray: 80;
+      stroke-dashoffset: 80;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    
+    .animate-checkmark {
+      animation: draw-checkmark 0.8s ease-in-out forwards;
+    }
+    
+    @keyframes draw-checkmark {
+      from { stroke-dashoffset: 80; }
+      to { stroke-dashoffset: 0; }
+    }
+    
+    .logo-text {
+      color: white;
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 7px;
+      text-align: center;
+    }
+    
+    .logo-tagline {
+      color: #94a3b8;
+      font-size: 20px;
+      text-align: center;
+      margin: 0 auto;
+    }
+    
+    .fade-out-intro {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Intro Screen -->
+<div id="intro-screen" class="intro-screen">
+  <div class="logo-container" id="logo-container">
+    <div class="checkmark-container">
+      <svg class="checkmark" id="checkmark" viewBox="0 0 24 24">
+        <path d="M3 12l6 6L21 6"></path>
+      </svg>
+    </div>
+    <h1 class="logo-text">CheckMate</h1>
+    <p class="logo-tagline">Your Meal, Your Move</p>
+  </div>
+</div>
+
+<div class="payment-card" id="payment-card">
+  <div id="bill-content">
+    <!-- Restaurant Name -->
+    <h1 class="restaurant-name">La Maison</h1>
+    
+    <!-- Bill Items -->
+    <div>
+      <h2>Your Bill</h2>
+      <div class="bill-items">
+        <div class="bill-item">
+          <span>Grilled Salmon</span>
+          <span>$28.00</span>
+        </div>
+        <div class="bill-item">
+          <span>House Wine</span>
+          <span>$12.00</span>
+        </div>
+        <div class="bill-item">
+          <span>Caesar Salad</span>
+          <span>$14.00</span>
+        </div>
+        <div class="subtotal">
+          <span>Subtotal</span>
+          <span>$54.00</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tip Selection -->
+    <div class="tip-selection">
+      <h2>Add Tip</h2>
+      <div class="tip-options">
+        <button class="tip-btn" data-tip="15">15%</button>
+        <button class="tip-btn" data-tip="18">18%</button>
+        <button class="tip-btn active" data-tip="20">20%</button>
+        <button class="tip-btn" data-tip="25">25%</button>
+        <button class="tip-btn" data-tip="custom">Custom</button>
+      </div>
+    </div>
+    
+    <!-- Total -->
+    <div class="total-section">
+      <span>Total</span>
+      <span id="total-amount">$64.80</span>
+    </div>
+    
+    <!-- Secondary Actions -->
+    <div class="action-buttons">
+      <button class="action-btn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="5" x2="5" y2="19"></line>
+          <circle cx="6.5" cy="6.5" r="2.5"></circle>
+          <circle cx="17.5" cy="17.5" r="2.5"></circle>
+        </svg>
+        Split Bill
+      </button>
+      <button class="action-btn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+          <line x1="2" y1="10" x2="22" y2="10"></line>
+        </svg>
+        Scan Card
+      </button>
+    </div>
+  </div>
+  
+  <!-- Pay Now Button -->
+  <button id="pay-button" class="payment-button">Pay Now</button>
+  
+  <!-- Thank You Message (initially hidden) -->
+  <div id="thank-you" class="thank-you">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    Thank you!
+  </div>
+  
+  <!-- Get Receipt Button (initially hidden) -->
+  <button id="receipt-button" class="receipt-button">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path>
+      <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+      <path d="M12 17.5v-11"></path>
+    </svg>
+    Get Receipt
+  </button>
+  
+  <!-- Receipt Options (initially hidden) -->
+  <div id="receipt-options" class="receipt-options">
+    <div class="receipt-options-container">
+      <button id="email-button" class="receipt-option">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+        Email
+      </button>
+      <button id="print-button" class="receipt-option">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect width="12" height="8" x="6" y="14"></rect>
+        </svg>
+        Print
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Intro animation sequence
+    const introScreen = document.getElementById('intro-screen');
+    const checkmark = document.getElementById('checkmark');
+    const paymentCard = document.getElementById('payment-card');
+    
+    // Start with the checkmark animation
+    setTimeout(() => {
+      checkmark.classList.add('animate-checkmark');
+      
+      // After a brief viewing period, fade out everything
+      setTimeout(() => {
+        // Fade out the entire intro screen
+        introScreen.classList.add('fade-out-intro');
+        
+        // Show payment card during the transition
+        setTimeout(() => {
+          paymentCard.classList.add('show-card');
+          
+          // Remove intro screen from DOM after animations complete
+          setTimeout(() => {
+            introScreen.style.display = 'none';
+          }, 700);
+        }, 400);
+      }, 1500);
+    }, 500);
+    
+    // Elements
+    const billContent = document.getElementById('bill-content');
+    const payButton = document.getElementById('pay-button');
+    const thankYou = document.getElementById('thank-you');
+    const receiptButton = document.getElementById('receipt-button');
+    const receiptOptions = document.getElementById('receipt-options');
+    const emailButton = document.getElementById('email-button');
+    const printButton = document.getElementById('print-button');
+    const tipButtons = document.querySelectorAll('.tip-btn');
+    
+    // Set active tip
+    tipButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tipButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update total
+        const tipPercent = parseInt(btn.dataset.tip) || 20;
+        const subtotal = 54.00;
+        const tipAmount = (tipPercent / 100) * subtotal;
+        const total = subtotal + tipAmount;
+        document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
+      });
+    });
+    
+    // Pay button click handler
+    payButton.addEventListener('click', () => {
+      // Fade out bill content
+      billContent.classList.add('fade-out');
+      
+      // Hide pay button
+      payButton.style.display = 'none';
+      
+      // Show thank you message
+      setTimeout(() => {
+        thankYou.style.display = 'flex';
+        thankYou.classList.add('fade-in');
+        
+        // Show receipt button after a short delay
+        setTimeout(() => {
+          receiptButton.style.display = 'flex';
+          receiptButton.classList.add('fade-in');
+        }, 700);
+      }, 400);
+    });
+    
+    // Receipt button click handler
+    receiptButton.addEventListener('click', () => {
+      // Hide the original receipt button
+      receiptButton.style.opacity = '0';
+      
+      // Show the options container
+      receiptOptions.style.display = 'block';
+      receiptOptions.classList.add('fade-in');
+      
+      // Add the movement classes to create split effect
+      setTimeout(() => {
+        emailButton.classList.add('move-left');
+        printButton.classList.add('move-right');
+        
+        // Fully hide the original button
+        receiptButton.style.display = 'none';
+      }, 50);
+    });
+    
+    // Email and Print button click handlers
+    emailButton.addEventListener('click', () => {
+      alert('Sending receipt to your email...');
+    });
+    
+    printButton.addEventListener('click', () => {
+      alert('Preparing receipt for printing...');
+    });
+  });
+</script>
+
+</body>
+</html>
