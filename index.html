@@ -242,6 +242,30 @@
       to { transform: translateX(20px); }
     }
     
+    .custom-tip-container {
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .custom-tip-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    
+    .custom-tip-input:focus {
+      border-color: #1f2937;
+      box-shadow: 0 0 0 2px rgba(31, 41, 55, 0.1);
+    }
+    
+    .show-custom-tip {
+      display: block;
+    }
+    
     /* Intro screen styling */
     .intro-screen {
       position: fixed;
@@ -363,7 +387,11 @@
         <button class="tip-btn" data-tip="18">18%</button>
         <button class="tip-btn active" data-tip="20">20%</button>
         <button class="tip-btn" data-tip="25">25%</button>
-        <button class="tip-btn" data-tip="custom">Custom</button>
+        <button class="tip-btn" data-tip="custom" id="custom-tip-btn">Custom</button>
+      </div>
+      <!-- Custom tip input (initially hidden) -->
+      <div class="custom-tip-container" id="custom-tip-container">
+        <input type="number" class="custom-tip-input" id="custom-tip-input" placeholder="Enter percentage (e.g. 22)" min="0" max="100">
       </div>
     </div>
     
@@ -477,17 +505,52 @@
     // Set active tip
     tipButtons.forEach(btn => {
       btn.addEventListener('click', () => {
+        // Remove active class from all buttons
         tipButtons.forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
         btn.classList.add('active');
         
-        // Update total
-        const tipPercent = parseInt(btn.dataset.tip) || 20;
-        const subtotal = 54.00;
-        const tipAmount = (tipPercent / 100) * subtotal;
-        const total = subtotal + tipAmount;
-        document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
+        // Handle custom tip option
+        const customTipContainer = document.getElementById('custom-tip-container');
+        const customTipInput = document.getElementById('custom-tip-input');
+        
+        if (btn.dataset.tip === 'custom') {
+          // Show custom tip input
+          customTipContainer.classList.add('show-custom-tip');
+          customTipInput.focus();
+          // Update total when custom tip changes
+          customTipInput.addEventListener('input', updateTotal);
+        } else {
+          // Hide custom tip input if another button is clicked
+          customTipContainer.classList.remove('show-custom-tip');
+          updateTotal();
+        }
       });
     });
+    
+    // Function to update total based on selected tip
+    function updateTotal() {
+      const activeBtn = document.querySelector('.tip-btn.active');
+      const customTipInput = document.getElementById('custom-tip-input');
+      let tipPercent;
+      
+      if (activeBtn.dataset.tip === 'custom' && customTipInput.value) {
+        tipPercent = parseFloat(customTipInput.value);
+      } else if (activeBtn.dataset.tip === 'custom') {
+        tipPercent = 0; // If custom selected but no value entered yet
+      } else {
+        tipPercent = parseInt(activeBtn.dataset.tip);
+      }
+      
+      const subtotal = 54.00;
+      const tipAmount = (tipPercent / 100) * subtotal;
+      const total = subtotal + tipAmount;
+      document.getElementById('total-amount').textContent = `${total.toFixed(2)}`;
+    }
+    
+    // Add event listener for custom tip input changes
+    const customTipInput = document.getElementById('custom-tip-input');
+    customTipInput.addEventListener('input', updateTotal);
     
     // Pay button click handler
     payButton.addEventListener('click', () => {
