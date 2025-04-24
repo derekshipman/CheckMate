@@ -43,7 +43,7 @@
     .restaurant-name {
       font-size: 28px;
       font-weight: 600;
-      color: #1f2937;
+      color: #800000;       /* accent red */
       text-align: center;
       margin-bottom: 24px;
     }
@@ -80,13 +80,13 @@
       border-radius: 8px;
       border: none;
       background-color: #f3f4f6;
-      color: #1f2937;
+      color: #800000;       /* accent red */
       cursor: pointer;
       font-weight: 500;
     }
     
     .tip-btn.active {
-      background-color: #1f2937;
+      background-color: #800000;  /* accent red */
       color: white;
     }
     
@@ -110,7 +110,7 @@
       border-radius: 8px;
       border: none;
       background-color: #f3f4f6;
-      color: #1f2937;
+      color: #800000;       /* accent red */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -122,6 +122,7 @@
     .icon {
       width: 20px;
       height: 20px;
+      stroke: currentColor;
     }
     
     .payment-button {
@@ -129,7 +130,7 @@
       padding: 16px;
       border-radius: 8px;
       border: none;
-      background-color: #1f2937;
+      background-color: #800000;  /* accent red */
       color: white;
       font-size: 18px;
       font-weight: 500;
@@ -138,7 +139,7 @@
     }
     
     .payment-button:hover {
-      background-color: #111827;
+      background-color: #660000;  /* darker red */
     }
     
     .thank-you {
@@ -148,7 +149,7 @@
       transform: translate(-50%, -50%);
       background-color: #10b981;
       color: white;
-      padding: 10px 15px; /* Reduced horizontal padding from 20px to 15px */
+      padding: 10px 15px;
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -167,7 +168,7 @@
       border-radius: 8px;
       border: none;
       background-color: #f3f4f6;
-      color: #1f2937;
+      color: #800000;       /* accent red */
       font-size: 16px;
       font-weight: 500;
       display: flex;
@@ -188,7 +189,7 @@
     
     .receipt-options-container {
       display: inline-flex;
-      gap: 4px; /* Very close together */
+      gap: 4px;
     }
     
     .receipt-option {
@@ -196,7 +197,7 @@
       border-radius: 8px;
       border: none;
       background-color: #f3f4f6;
-      color: #1f2937;
+      color: #800000;       /* accent red */
       font-size: 16px;
       font-weight: 500;
       display: flex;
@@ -242,30 +243,6 @@
       to { transform: translateX(20px); }
     }
     
-    .custom-tip-container {
-      margin-top: 10px;
-      display: none;
-    }
-    
-    .custom-tip-input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 16px;
-      outline: none;
-      transition: all 0.2s;
-    }
-    
-    .custom-tip-input:focus {
-      border-color: #1f2937;
-      box-shadow: 0 0 0 2px rgba(31, 41, 55, 0.1);
-    }
-    
-    .show-custom-tip {
-      display: block;
-    }
-    
     /* Intro screen styling */
     .intro-screen {
       position: fixed;
@@ -273,7 +250,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: #1f2937;
+      background-color: #800000;  /* accent red */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -289,7 +266,7 @@
     
     .checkmark-container {
       display: block;
-      margin: 0 auto 5px auto; /* Reduced margin from 15px to 5px */
+      margin: 0 auto 5px auto;
       width: 50px;
       height: 50px;
     }
@@ -325,7 +302,7 @@
     }
     
     .logo-tagline {
-      color: #94a3b8;
+      color: white;  /* keep readable on red */
       font-size: 20px;
       text-align: center;
       margin: 0 auto;
@@ -347,34 +324,34 @@
       </svg>
     </div>
     <h1 class="logo-text">CheckMate</h1>
-    <p class="logo-tagline">Your Meal, Your Move</p>
+    <p class="logo-tagline">Home of the Perfect Cut</p>
   </div>
 </div>
 
 <div class="payment-card" id="payment-card">
   <div id="bill-content">
     <!-- Restaurant Name -->
-    <h1 class="restaurant-name">La Maison</h1>
+    <h1 class="restaurant-name">Joe's Diner</h1>
     
     <!-- Bill Items -->
     <div>
       <h2>Your Bill</h2>
       <div class="bill-items">
         <div class="bill-item">
-          <span>Grilled Salmon</span>
-          <span>$28.00</span>
+          <span>Ribeye Steak</span>
+          <span>$34.00</span>
         </div>
         <div class="bill-item">
-          <span>House Wine</span>
-          <span>$12.00</span>
+          <span>Filet Mignon</span>
+          <span>$42.00</span>
         </div>
         <div class="bill-item">
-          <span>Caesar Salad</span>
-          <span>$14.00</span>
+          <span>Baked Potato</span>
+          <span>$10.00</span>
         </div>
         <div class="subtotal">
           <span>Subtotal</span>
-          <span>$54.00</span>
+          <span>$86.00</span>
         </div>
       </div>
     </div>
@@ -387,18 +364,14 @@
         <button class="tip-btn" data-tip="18">18%</button>
         <button class="tip-btn active" data-tip="20">20%</button>
         <button class="tip-btn" data-tip="25">25%</button>
-        <button class="tip-btn" data-tip="custom" id="custom-tip-btn">Custom</button>
-      </div>
-      <!-- Custom tip input (initially hidden) -->
-      <div class="custom-tip-container" id="custom-tip-container">
-        <input type="number" class="custom-tip-input" id="custom-tip-input" placeholder="Enter Percentage" min="0" max="100">
+        <button class="tip-btn" data-tip="custom">Custom</button>
       </div>
     </div>
     
     <!-- Total -->
     <div class="total-section">
       <span>Total</span>
-      <span id="total-amount">$64.80</span>
+      <span id="total-amount">$103.20</span>
     </div>
     
     <!-- Secondary Actions -->
@@ -455,7 +428,7 @@
       <button id="print-button" class="receipt-option">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 6 2 18 2 18 9"></polyline>
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5…"></path>
           <rect width="12" height="8" x="6" y="14"></rect>
         </svg>
         Print
@@ -505,52 +478,17 @@
     // Set active tip
     tipButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Remove active class from all buttons
         tipButtons.forEach(b => b.classList.remove('active'));
-        // Add active class to clicked button
         btn.classList.add('active');
         
-        // Handle custom tip option
-        const customTipContainer = document.getElementById('custom-tip-container');
-        const customTipInput = document.getElementById('custom-tip-input');
-        
-        if (btn.dataset.tip === 'custom') {
-          // Show custom tip input
-          customTipContainer.classList.add('show-custom-tip');
-          customTipInput.focus();
-          // Update total when custom tip changes
-          customTipInput.addEventListener('input', updateTotal);
-        } else {
-          // Hide custom tip input if another button is clicked
-          customTipContainer.classList.remove('show-custom-tip');
-          updateTotal();
-        }
+        // Update total
+        const tipPercent = parseInt(btn.dataset.tip) || 20;
+        const subtotal = 86.00;
+        const tipAmount = (tipPercent / 100) * subtotal;
+        const total = subtotal + tipAmount;
+        document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
       });
     });
-    
-    // Function to update total based on selected tip
-    function updateTotal() {
-      const activeBtn = document.querySelector('.tip-btn.active');
-      const customTipInput = document.getElementById('custom-tip-input');
-      let tipPercent;
-      
-      if (activeBtn.dataset.tip === 'custom' && customTipInput.value) {
-        tipPercent = parseFloat(customTipInput.value);
-      } else if (activeBtn.dataset.tip === 'custom') {
-        tipPercent = 0; // If custom selected but no value entered yet
-      } else {
-        tipPercent = parseInt(activeBtn.dataset.tip);
-      }
-      
-      const subtotal = 54.00;
-      const tipAmount = (tipPercent / 100) * subtotal;
-      const total = subtotal + tipAmount;
-      document.getElementById('total-amount').textContent = `${total.toFixed(2)}`;
-    }
-    
-    // Add event listener for custom tip input changes
-    const customTipInput = document.getElementById('custom-tip-input');
-    customTipInput.addEventListener('input', updateTotal);
     
     // Pay button click handler
     payButton.addEventListener('click', () => {
