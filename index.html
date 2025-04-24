@@ -43,7 +43,7 @@
     .restaurant-name {
       font-size: 28px;
       font-weight: 600;
-      color: #800000;       /* accent red */
+      color: #d2b48c;      /* light brown accent */
       text-align: center;
       margin-bottom: 24px;
     }
@@ -80,13 +80,13 @@
       border-radius: 8px;
       border: none;
       background-color: #f3f4f6;
-      color: #800000;       /* accent red */
+      color: #d2b48c;      /* light brown */
       cursor: pointer;
       font-weight: 500;
     }
     
     .tip-btn.active {
-      background-color: #800000;  /* accent red */
+      background-color: #d2b48c;  /* light brown */
       color: white;
     }
     
@@ -110,7 +110,7 @@
       border-radius: 8px;
       border: none;
       background-color: #f3f4f6;
-      color: #800000;       /* accent red */
+      color: #d2b48c;      /* light brown */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -130,7 +130,7 @@
       padding: 16px;
       border-radius: 8px;
       border: none;
-      background-color: #800000;  /* accent red */
+      background-color: #d2b48c;  /* light brown */
       color: white;
       font-size: 18px;
       font-weight: 500;
@@ -139,7 +139,7 @@
     }
     
     .payment-button:hover {
-      background-color: #660000;  /* darker red */
+      background-color: #b89776;  /* darker brown */
     }
     
     .thank-you {
@@ -168,7 +168,7 @@
       border-radius: 8px;
       border: none;
       background-color: #f3f4f6;
-      color: #800000;       /* accent red */
+      color: #d2b48c;      /* light brown */
       font-size: 16px;
       font-weight: 500;
       display: flex;
@@ -189,7 +189,7 @@
     
     .receipt-options-container {
       display: inline-flex;
-      gap: 4px;
+      gap: 4px; 
     }
     
     .receipt-option {
@@ -197,7 +197,7 @@
       border-radius: 8px;
       border: none;
       background-color: #f3f4f6;
-      color: #800000;       /* accent red */
+      color: #d2b48c;      /* light brown */
       font-size: 16px;
       font-weight: 500;
       display: flex;
@@ -250,7 +250,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: #800000;  /* accent red */
+      background-color: #d2b48c;  /* light brown */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -302,7 +302,7 @@
     }
     
     .logo-tagline {
-      color: white;  /* keep readable on red */
+      color: white;
       font-size: 20px;
       text-align: center;
       margin: 0 auto;
@@ -324,14 +324,14 @@
       </svg>
     </div>
     <h1 class="logo-text">CheckMate</h1>
-    <p class="logo-tagline">Home of the Perfect Cut</p>
+    <p class="logo-tagline">Your Neighborhood Diner</p>
   </div>
 </div>
 
 <div class="payment-card" id="payment-card">
   <div id="bill-content">
     <!-- Restaurant Name -->
-    <h1 class="restaurant-name">Joe's Diner</h1>
+    <h1 class="restaurant-name">Sunrise Diner</h1>
     
     <!-- Bill Items -->
     <div>
@@ -397,7 +397,7 @@
   <!-- Pay Now Button -->
   <button id="pay-button" class="payment-button">Pay Now</button>
   
-  <!-- Thank You Message (initially hidden) -->
+  <!-- Thank You Message -->
   <div id="thank-you" class="thank-you">
     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
       <polyline points="20 6 9 17 4 12"></polyline>
@@ -405,7 +405,7 @@
     Thank you!
   </div>
   
-  <!-- Get Receipt Button (initially hidden) -->
+  <!-- Get Receipt Button -->
   <button id="receipt-button" class="receipt-button">
     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path>
@@ -439,71 +439,44 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Intro animation sequence
     const introScreen = document.getElementById('intro-screen');
     const checkmark = document.getElementById('checkmark');
     const paymentCard = document.getElementById('payment-card');
-    
-    // Start with the checkmark animation
-    setTimeout(() => {
-      checkmark.classList.add('animate-checkmark');
-      
-      // After a brief viewing period, fade out everything
-      setTimeout(() => {
-        // Fade out the entire intro screen
-        introScreen.classList.add('fade-out-intro');
-        
-        // Show payment card during the transition
-        setTimeout(() => {
-          paymentCard.classList.add('show-card');
-          
-          // Remove intro screen from DOM after animations complete
-          setTimeout(() => {
-            introScreen.style.display = 'none';
-          }, 700);
-        }, 400);
-      }, 1500);
-    }, 500);
-    
-    // Elements
-    const billContent = document.getElementById('bill-content');
+    const tipButtons = document.querySelectorAll('.tip-btn');
     const payButton = document.getElementById('pay-button');
     const thankYou = document.getElementById('thank-you');
     const receiptButton = document.getElementById('receipt-button');
     const receiptOptions = document.getElementById('receipt-options');
     const emailButton = document.getElementById('email-button');
     const printButton = document.getElementById('print-button');
-    const tipButtons = document.querySelectorAll('.tip-btn');
+    const subtotal = 86.00;
     
-    // Set active tip
+    setTimeout(() => {
+      checkmark.classList.add('animate-checkmark');
+      setTimeout(() => {
+        introScreen.classList.add('fade-out-intro');
+        setTimeout(() => {
+          paymentCard.classList.add('show-card');
+          setTimeout(() => { introScreen.style.display = 'none'; }, 700);
+        }, 400);
+      }, 1500);
+    }, 500);
+    
     tipButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         tipButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
-        // Update total
-        const tipPercent = parseInt(btn.dataset.tip) || 20;
-        const subtotal = 86.00;
-        const tipAmount = (tipPercent / 100) * subtotal;
-        const total = subtotal + tipAmount;
-        document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
+        const pct = parseInt(btn.dataset.tip) || 20;
+        document.getElementById('total-amount').textContent = `$${(subtotal * (1 + pct/100)).toFixed(2)}`;
       });
     });
     
-    // Pay button click handler
     payButton.addEventListener('click', () => {
-      // Fade out bill content
-      billContent.classList.add('fade-out');
-      
-      // Hide pay button
+      document.getElementById('bill-content').classList.add('fade-out');
       payButton.style.display = 'none';
-      
-      // Show thank you message
       setTimeout(() => {
         thankYou.style.display = 'flex';
         thankYou.classList.add('fade-in');
-        
-        // Show receipt button after a short delay
         setTimeout(() => {
           receiptButton.style.display = 'flex';
           receiptButton.classList.add('fade-in');
@@ -511,33 +484,18 @@
       }, 400);
     });
     
-    // Receipt button click handler
     receiptButton.addEventListener('click', () => {
-      // Hide the original receipt button
       receiptButton.style.opacity = '0';
-      
-      // Show the options container
       receiptOptions.style.display = 'block';
       receiptOptions.classList.add('fade-in');
-      
-      // Add the movement classes to create split effect
       setTimeout(() => {
         emailButton.classList.add('move-left');
         printButton.classList.add('move-right');
-        
-        // Fully hide the original button
         receiptButton.style.display = 'none';
       }, 50);
     });
-    
-    // Email and Print button click handlers
-    emailButton.addEventListener('click', () => {
-      alert('Sending receipt to your email...');
-    });
-    
-    printButton.addEventListener('click', () => {
-      alert('Preparing receipt for printing...');
-    });
+    emailButton.addEventListener('click', () => alert('Sending receipt to your email...'));
+    printButton.addEventListener('click', () => alert('Preparing receipt for printing...'));
   });
 </script>
 
